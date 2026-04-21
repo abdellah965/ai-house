@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import SearchFilterBar from "../components/Searchfilterbar";
+import SearchFilterBar from "../components/SearchFilterBar";
 import RepCard         from "../components/Repcard";
 import Footer          from "../components/Footer";
 import { DEPARTMENTS } from "../data/mockData"; 
