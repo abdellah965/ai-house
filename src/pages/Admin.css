@@ -657,6 +657,26 @@
     height: 28px;
   }
 
+  /* 6. Fix Overview Tab: Stack the stat cards vertically on phones */
+  .stats-grid {
+    grid-template-columns: 1fr !important; /* '1fr' means 1 single column */
+    gap: 1rem !important;
+  }
+
+  /* 7. Fix Overview Tab: Stack the bottom charts and heatmaps */
+  .dashboard-grid-layout {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+  
+  /* 8. Make sure the content boxes don't overflow the screen */
+  .dashboard-view .glass-card {
+    width: 100%;
+    overflow-x: auto; /* Let the charts swipe left/right if needed */
+  }
+
 }
 
 /* ── Premium Hover Tooltip ── */
