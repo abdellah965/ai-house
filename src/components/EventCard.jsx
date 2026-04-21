@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./Eventcard.css";
+import "./EventCard.css";
 
 const TYPE_COLORS = {
   Workshop:    { bg: "#e8f0fc", text: "#004299" },
