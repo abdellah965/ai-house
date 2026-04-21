@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./StatsBar.css";
+import "./Statsbar.css";
 
 
 
