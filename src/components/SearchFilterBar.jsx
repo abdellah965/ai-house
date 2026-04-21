@@ -1,4 +1,4 @@
-import "./Searchfilterbar.css";
+import "./SearchFilterBar.css";
 
 /**
  * SearchFilterBar props:
