@@ -1,5 +1,5 @@
 import OfferCard from "./Offercard";
-import "./Offersection.css";
+import "./OfferSection.css";
 
 const OFFERS = [
   {
