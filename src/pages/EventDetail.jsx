@@ -59,7 +59,6 @@ export default function EventDetail() {
   );
 
   const isPast   = event.status === "past";
-  const isEventOwner = user?.role === "representative" && user?.department === event.department;
   const dateObj  = new Date(event.date);
   const formatted = dateObj.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
@@ -260,7 +259,7 @@ export default function EventDetail() {
         </div>
 
         {/* Right: registration form (upcoming only) */}
-        {!isPast && !isEventOwner && (
+        {!isPast && user?.fullName === event.instructor && (
           <div className="event-detail__register">
             <div className="event-detail__register-card">
               <h2 className="event-detail__register-title">Reserve Your Spot</h2>
