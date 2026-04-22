@@ -26,13 +26,24 @@ export default function Training() {
     setFilters((prev) => ({ ...prev, [key]: value }));
 
   const results = useMemo(() => {
+
+    const now = new Date(); 
+
     return events.filter((e) => {
+
+      const eventDateTime = new Date(`${e.date}T${e.time || "00:00"}`);
+      
+
+      const realStatus = eventDateTime < now ? "Past" : "Upcoming";
+
       const q = search.toLowerCase();
       if (q && !e.title.toLowerCase().includes(q) && !e.topic.toLowerCase().includes(q)) return false;
       if (filters.department && e.department !== filters.department) return false;
-      if (filters.type       && e.type       !== filters.type)       return false;
-      if (filters.topic      && e.topic      !== filters.topic)      return false;
-      if (filters.status     && e.status     !== filters.status)     return false;
+      if (filters.type       && e.type !== filters.type) return false;
+      
+      // 4. Filter using our new 'realStatus' instead of the database text!
+      if (filters.status && realStatus.toLowerCase() !== filters.status.toLowerCase()) return false;
+      
       return true;
     });
   }, [search, filters, events]);
