@@ -9,7 +9,12 @@ const TYPE_COLORS = {
 
 export default function EventCard({ id, title, type, topic, department, status, date, time, location, mode }) {
   const colors  = TYPE_COLORS[type] || TYPE_COLORS.Workshop;
-  const isPast  = status === "past";
+
+  // MAGIC FIX 1: The Smart Clock Logic
+  const now = new Date();
+  const eventDateTime = new Date(`${date}T${time || "00:00"}`);
+  const isPast = eventDateTime < now;
+
   const dateObj = new Date(date);
   const formatted = dateObj.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
