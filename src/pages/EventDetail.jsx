@@ -19,6 +19,25 @@ export default function EventDetail() {
 
   const [uploadingFile, setUploadingFile] = useState(false);
 
+  // ==========================================
+  // MAGIC FIX 1: State for the Edit Modal
+  // ==========================================
+  const [isEditing, setIsEditing] = useState(false);
+  const [editEventForm, setEditEventForm] = useState(event || {});
+
+  // Function to save the edits
+  const handleSaveEdit = async () => {
+    try {
+      // Send the updated data to your context/database
+      await updateEvent(event.id, editEventForm);
+      setIsEditing(false); // Close the modal
+      alert("Event updated successfully!"); // Simple success message
+    } catch (err) {
+      console.error("Failed to update event", err);
+      alert("Failed to update event.");
+    }
+  };
+
   const handleFileUpload = async (e, fileName) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -125,6 +144,27 @@ export default function EventDetail() {
             </span>
           </div>
           <h1 className="event-detail__title">{event.title}</h1>
+          <h1 style={{ color: "#fff", fontSize: "2rem", marginBottom: "0.5rem" }}>{event.title}</h1>
+          
+          {/* ========================================== */}
+          {/* MAGIC FIX 3: Exclusive Edit Button for the Owner */}
+          {/* ========================================== */}
+          {user?.fullName === event.instructor && (
+            <button 
+              onClick={() => {
+                setEditEventForm(event); // Load current data into the form
+                setIsEditing(true);      // Open the modal
+              }} 
+              style={{ 
+                marginTop: '1rem', padding: '8px 16px', background: 'rgba(255,255,255,0.15)', 
+                color: '#fff', border: '1px solid rgba(255,255,255,0.4)', borderRadius: '8px', 
+                cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' 
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Edit Event Details
+            </button>
+          )}
           <p className="event-detail__instructor">Delivered by {event.instructor}</p>
         </div>
       </div>
