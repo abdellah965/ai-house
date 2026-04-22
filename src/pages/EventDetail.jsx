@@ -259,7 +259,7 @@ export default function EventDetail() {
         </div>
 
         {/* Right: registration form (upcoming only) */}
-        {!isPast && (
+        {!isPast && !isEventOwner && (
           <div className="event-detail__register">
             <div className="event-detail__register-card">
               <h2 className="event-detail__register-title">Reserve Your Spot</h2>
