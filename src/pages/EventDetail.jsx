@@ -350,6 +350,52 @@ export default function EventDetail() {
         </div>
       </div>
 
+      {/* ========================================== */}
+      {/* MAGIC FIX 4: The Edit Event Modal Window */}
+      {/* ========================================== */}
+      {isEditing && (
+        <div className="modal-overlay" onClick={() => setIsEditing(false)} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="glass-modal" onClick={e => e.stopPropagation()} style={{ background: '#fff', padding: '2rem', borderRadius: '12px', width: '90%', maxWidth: '550px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+            
+            <h2 style={{ marginBottom: '1.5rem', color: 'var(--text-main)' }}>Edit Event</h2>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Event Title</label>
+                <input value={editEventForm.title || ""} onChange={e => setEditEventForm({...editEventForm, title: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Topic</label>
+                <input value={editEventForm.topic || ""} onChange={e => setEditEventForm({...editEventForm, topic: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Date</label>
+                  <input type="date" value={editEventForm.date || ""} onChange={e => setEditEventForm({...editEventForm, date: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Time</label>
+                  <input type="time" value={editEventForm.time || ""} onChange={e => setEditEventForm({...editEventForm, time: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Location / Meet Link</label>
+                <input value={editEventForm.location || ""} onChange={e => setEditEventForm({...editEventForm, location: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', justifyContent: 'flex-end' }}>
+              <button onClick={() => setIsEditing(false)} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: 'var(--light-gray)', color: 'var(--text-main)', cursor: 'pointer', fontWeight: '600' }}>Cancel</button>
+              <button onClick={handleSaveEdit} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: 'var(--blue)', color: '#fff', cursor: 'pointer', fontWeight: '600' }}>Save Changes</button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
