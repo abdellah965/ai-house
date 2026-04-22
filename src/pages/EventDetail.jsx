@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth }   from "../context/AuthContext";
 import { useEvents } from "../context/EventsContext";
 import Footer from "../components/Footer";
+import { DEPARTMENTS } from "../data/mockData";
 import "./EventDetail.css";
 
 export default function EventDetail() {
@@ -25,16 +26,41 @@ export default function EventDetail() {
   const [isEditing, setIsEditing] = useState(false);
   const [editEventForm, setEditEventForm] = useState(event || {});
 
-  // Function to save the edits
+  // MAGIC FIX 2: State for the beautiful green message
+  const [successToast, setSuccessToast] = useState("");
+
   const handleSaveEdit = async () => {
     try {
-      // Send the updated data to your context/database
-      await updateEvent(event.id, editEventForm);
-      setIsEditing(false); // Close the modal
-      alert("Event updated successfully!"); // Simple success message
+      const token = localStorage.getItem("token");
+      
+      // 1. Send the edits to our new backend route!
+      // (If you use a deployed backend URL instead of localhost, change it here!)
+      const res = await fetch(`http://localhost:5000/api/events/${event.id || event._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(editEventForm)
+      });
+
+      if (res.ok) {
+        const updatedData = await res.json();
+        
+        // 2. Update the frontend context so the screen refreshes instantly
+        if (updateEvent) {
+           await updateEvent(event.id || event._id, updatedData); 
+        }
+
+        // 3. Close the modal and show the beautiful green message!
+        setIsEditing(false);
+        setSuccessToast("Event details updated successfully!");
+        setTimeout(() => setSuccessToast(""), 3500); // Hides after 3.5 seconds
+      } else {
+        alert("Failed to save. Check server logs.");
+      }
     } catch (err) {
       console.error("Failed to update event", err);
-      alert("Failed to update event.");
     }
   };
 
@@ -365,9 +391,44 @@ export default function EventDetail() {
                 <input value={editEventForm.title || ""} onChange={e => setEditEventForm({...editEventForm, title: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
               </div>
               
-              <div>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Topic</label>
-                <input value={editEventForm.topic || ""} onChange={e => setEditEventForm({...editEventForm, topic: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Type</label>
+                  <select value={editEventForm.type || ""} onChange={e => setEditEventForm({...editEventForm, type: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Competition">Competition</option>
+                  </select>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Audience</label>
+                  <select value={editEventForm.audience || ""} onChange={e => setEditEventForm({...editEventForm, audience: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                    <option value="Students">Students</option>
+                    <option value="Representatives">Representatives</option>
+                    <option value="General Public">General Public</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Topic</label>
+                  <input value={editEventForm.topic || ""} onChange={e => setEditEventForm({...editEventForm, topic: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+                </div>
+                {/* MAGIC FIX 1: The dynamic Department Dropdown! */}
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Department</label>
+                  <select 
+                    value={editEventForm.department || ""} 
+                    onChange={e => setEditEventForm({...editEventForm, department: e.target.value})} 
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                  >
+                    <option value="" disabled>Select Department</option>
+                    {DEPARTMENTS.map(dept => (
+                      <option key={dept} value={dept}>{dept}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div style={{ display: 'flex', gap: '1rem' }}>
@@ -385,6 +446,17 @@ export default function EventDetail() {
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Location / Meet Link</label>
                 <input value={editEventForm.location || ""} onChange={e => setEditEventForm({...editEventForm, location: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
               </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Description</label>
+                <textarea rows="4" value={editEventForm.desc || ""} onChange={e => setEditEventForm({...editEventForm, desc: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)', fontFamily: 'inherit' }} />
+              </div>
+            </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Location / Meet Link</label>
+                <input value={editEventForm.location || ""} onChange={e => setEditEventForm({...editEventForm, location: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+              </div>
             </div>
 
             <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', justifyContent: 'flex-end' }}>
@@ -397,6 +469,18 @@ export default function EventDetail() {
       )}
 
       <Footer />
+
+      {/* MAGIC FIX 3: The Beautiful Green Toast Message */}
+      {successToast && (
+        <div className="event-toast-success">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          {successToast}
+        </div>
+      )}
+      
     </div>
   );
 }
