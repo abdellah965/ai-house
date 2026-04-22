@@ -41,11 +41,14 @@ export default function Footer() {
           )}
         </div>
 
-        <div className="footer__col">
-          <h4>Account</h4>
-          <Link to="/signin">Sign In</Link>
-          <Link to="/signup">Create Account</Link>
-        </div>
+        {/* MAGIC FIX 1: Only show the Account section if 'user' does NOT exist */}
+        {!user && (
+          <div className="footer__col">
+            <h4>Account</h4>
+            <Link to="/signin">Sign In</Link>
+            <Link to="/signup">Create Account</Link>
+          </div>
+        )}
 
         <div className="footer__col">
           <h4>Contact</h4>
