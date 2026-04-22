@@ -13,6 +13,8 @@ export default function EventDetail() {
   const navigate    = useNavigate();
   const event       = events.find((e) => String(e.id) === String(id));
 
+  const TOPICS = ["Python", "Data Science", "Machine Learning", "Automation", "AI Ethics", "AI in Research", "AI Challenge"];
+
   const [form,    setForm]    = useState({ name: user?.fullName || "", email: user?.email || "", department: user?.department || "" });
   const [success, setSuccess] = useState(false);
   const [error,   setError]   = useState("");
@@ -177,17 +179,13 @@ export default function EventDetail() {
           {/* ========================================== */}
           {user?.fullName === event.instructor && (
             <button 
-              onClick={() => {
-                setEditEventForm(event); // Load current data into the form
-                setIsEditing(true);      // Open the modal
-              }} 
-              style={{ 
-                marginTop: '1rem', padding: '8px 16px', background: 'rgba(255,255,255,0.15)', 
-                color: '#fff', border: '1px solid rgba(255,255,255,0.4)', borderRadius: '8px', 
-                cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' 
-              }}
+              className="event-detail__edit-btn"
+              onClick={() => { setEditEventForm(event); setIsEditing(true); }} 
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
               Edit Event Details
             </button>
           )}
@@ -413,7 +411,16 @@ export default function EventDetail() {
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Topic</label>
-                  <input value={editEventForm.topic || ""} onChange={e => setEditEventForm({...editEventForm, topic: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+                  <select 
+                    value={editEventForm.topic || ""} 
+                    onChange={e => setEditEventForm({...editEventForm, topic: e.target.value})} 
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}
+                  >
+                    <option value="" disabled>Select Topic</option>
+                    {TOPICS.map(t => (
+                      <option key={t} value={t}>{t}</option>
+                    ))}
+                  </select>
                 </div>
                 {/* MAGIC FIX 1: The dynamic Department Dropdown! */}
                 <div style={{ flex: 1 }}>
