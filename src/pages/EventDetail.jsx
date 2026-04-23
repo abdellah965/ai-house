@@ -172,7 +172,6 @@ export default function EventDetail() {
             </span>
           </div>
           <h1 className="event-detail__title">{event.title}</h1>
-          <h1 style={{ color: "#fff", fontSize: "2rem", marginBottom: "0.5rem" }}>{event.title}</h1>
           
           {/* ========================================== */}
           {/* MAGIC FIX 3: Exclusive Edit Button for the Owner */}
