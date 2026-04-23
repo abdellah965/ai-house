@@ -460,9 +460,25 @@ export default function EventDetail() {
               </div>
             </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Location / Meet Link</label>
-                <input value={editEventForm.location || ""} onChange={e => setEditEventForm({...editEventForm, location: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                {/* Location Input (Takes up more space) */}
+                <div style={{ flex: 2 }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Location / Meet Link</label>
+                  <input value={editEventForm.location || ""} onChange={e => setEditEventForm({...editEventForm, location: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
+                </div>
+                
+                {/* MAGIC FIX: The Important Number of Seats Field! */}
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Number of Seats</label>
+                  <input 
+                    type="number" 
+                    min="1" 
+                    placeholder="e.g. 50" 
+                    value={editEventForm.seats || ""} 
+                    onChange={e => setEditEventForm({...editEventForm, seats: e.target.value})} 
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} 
+                  />
+                </div>
               </div>
             </div>
 
