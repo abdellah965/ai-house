@@ -13,14 +13,13 @@ export default function EventDetail() {
   const navigate    = useNavigate();
   const event       = events.find((e) => String(e.id) === String(id));
 
-  const TOPICS = ["Python", "Data Science", "Machine Learning", "Automation", "AI Ethics", "AI in Research", "AI Challenge"];
-
   const [form,    setForm]    = useState({ name: user?.fullName || "", email: user?.email || "", department: user?.department || "" });
   const [success, setSuccess] = useState(false);
   const [error,   setError]   = useState("");
   const [loading, setLoading] = useState(false);
 
   const [uploadingFile, setUploadingFile] = useState(false);
+  const TOPICS = ["Python", "Data Science", "Machine Learning", "Automation", "AI Ethics", "AI in Research", "AI Challenge"];
 
   // ==========================================
   // MAGIC FIX 1: State for the Edit Modal
@@ -28,6 +27,7 @@ export default function EventDetail() {
   const [isEditing, setIsEditing] = useState(false);
   const [editEventForm, setEditEventForm] = useState(event || {});
 
+  // Function to save the edits
   // MAGIC FIX 2: State for the beautiful green message
   const [successToast, setSuccessToast] = useState("");
 
@@ -37,7 +37,7 @@ export default function EventDetail() {
       
       // 1. Send the edits to our new backend route!
       // (If you use a deployed backend URL instead of localhost, change it here!)
-      const res = await fetch(`http://localhost:5000/api/events/${event.id || event._id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/events/${event.id || event._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -421,7 +421,6 @@ export default function EventDetail() {
                     ))}
                   </select>
                 </div>
-                {/* MAGIC FIX 1: The dynamic Department Dropdown! */}
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Department</label>
                   <select 
@@ -448,17 +447,6 @@ export default function EventDetail() {
                 </div>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Location / Meet Link</label>
-                <input value={editEventForm.location || ""} onChange={e => setEditEventForm({...editEventForm, location: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Description</label>
-                <textarea rows="4" value={editEventForm.desc || ""} onChange={e => setEditEventForm({...editEventForm, desc: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)', fontFamily: 'inherit' }} />
-              </div>
-            </div>
-
               <div style={{ display: 'flex', gap: '1rem' }}>
                 {/* Location Input (Takes up more space) */}
                 <div style={{ flex: 2 }}>
@@ -478,6 +466,11 @@ export default function EventDetail() {
                     style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }} 
                   />
                 </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '700', marginBottom: '5px' }}>Description</label>
+                <textarea rows="4" value={editEventForm.desc || ""} onChange={e => setEditEventForm({...editEventForm, desc: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)', fontFamily: 'inherit' }} />
               </div>
             </div>
 
@@ -502,7 +495,7 @@ export default function EventDetail() {
           {successToast}
         </div>
       )}
-      
+
     </div>
   );
 }
